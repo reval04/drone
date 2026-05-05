@@ -1,28 +1,8 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include "drone.h"
 
 #define MAX 5
 
-typedef struct singleLinkedList
-{
-	int x;
-	int y;
-	struct singleLinkedList* next;
-}SLL;
-
-typedef struct singleLinkedListHead
-{
-	SLL* head;
-}SLLH;
-
-SLLH* createSingleLinkedList();
-void insertLastNode(SLLH* L, int x, int y);
-void bubbleSort(SLLH* L);
-void freeLinkedList(SLLH* L);
-
-int main()
+void arrangeWayPoint()
 {
 	FILE* fp2 = fopen("01.txt", "r");
 	SLLH* head = createSingleLinkedList();
@@ -37,6 +17,7 @@ int main()
 	fclose(fp2);
 	
 	bubbleSort(head);
+	pinPointing(head);
 	FILE * fp2w = fopen("02.txt", "w");
 	temp = head->head;
 
@@ -48,44 +29,8 @@ int main()
 	}
 	fclose(fp2w);
 	freeLinkedList(head);
-	system("02.txt notepad.exe");
-}
-
-SLLH* createSingleLinkedList()
-{
-	SLLH* h;
-	h = (SLLH*)malloc(sizeof(SLLH));
-	h->head = NULL;
-	return h;
-}
-
-void insertLastNode(SLLH* L, int x, int y)
-{
-	SLL* newNode;
-	SLL* temp;
-	newNode = (SLL*)malloc(sizeof(SLL));
-	newNode->x = x;
-	newNode->y = y;
-	newNode->next = NULL;
-	if (L->head == NULL) {
-		L->head = newNode;
-		return;
-	}
-
-	temp = L->head;
-	while (temp->next != NULL) temp = temp->next;
-	temp->next = newNode;
-}
-
-void freeLinkedList(SLLH* L)
-{
-	SLL* p;
-	while (L->head != NULL) {
-		p = L->head;
-		L->head = L->head->next;
-		free(p);
-		p = NULL;
-	}
+	printf("===================================================\n");
+	system("notepad.exe 02.txt");
 }
 
 void bubbleSort(SLLH* L)
@@ -100,6 +45,7 @@ void bubbleSort(SLLH* L)
 	int distance1, distance2;
 	for (i = 0; i < MAX - 1; i++)
 	{
+		current = L->head;
 		for (j = 0; j < MAX - 1 - i; j++)
 		{
 			if (current != NULL && current->next != NULL)
@@ -117,5 +63,18 @@ void bubbleSort(SLLH* L)
 				current = current->next;
 			}
 		}
+	}
+}
+
+void pinPointing(SLLH* L)
+{
+	SLL* temp = L->head;
+	int i = 0;
+
+	while (temp != NULL)
+	{
+		temp->name = 'A' + i;
+		i++;
+		temp = temp->next;
 	}
 }
