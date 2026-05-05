@@ -1,32 +1,8 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <math.h>
+#include "drone.h"
 
 #define MAX 5
-int count = 0;
 
-typedef struct singleLinkedList
-{
-	char name;
-	int x;
-	int y;
-	struct singleLinkedList* next;
-}SLL;
-
-typedef struct singleLinkedListHead
-{
-	SLL* head;
-}SLLH;
-
-SLLH* createSingleLinkedList();
-void insertLastNode(SLLH* L, int x, int y);
-double distance(SLL* p);
-void printDistance(double* d, SLL* t);
-void freeLinkedList(SLLH* L);
-
-int main()
+void makeDistancePerBatteryTable()
 {
 	double dis[MAX - 1];
 	FILE* fp3r = fopen("02.txt", "r");
@@ -52,48 +28,9 @@ int main()
 	temp = nodeHead->head;
 	printDistance(dis, temp);
 	freeLinkedList(nodeHead);
-	
-	system("03.txt notepad.exe");
-}
+	printf("===================================================\n");
 
-SLLH* createSingleLinkedList()
-{
-	SLLH* h;
-	h = (SLLH*)malloc(sizeof(SLLH));
-	h->head = NULL;
-	return h;
-}
-
-void insertLastNode(SLLH* L, int x, int y)
-{
-	SLL* newNode;
-	SLL* temp;
-	newNode = (SLL*)malloc(sizeof(SLL));
-	newNode->name = 'A' + count;
-	newNode->x = x;
-	newNode->y = y;
-	newNode->next = NULL;
-	if (L->head == NULL) {
-		L->head = newNode;
-		count++;
-		return;
-	}
-
-	temp = L->head;
-	while (temp->next != NULL) temp = temp->next;
-	temp->next = newNode;
-	count++;
-}
-
-void freeLinkedList(SLLH* L)
-{
-	SLL* p;
-	while (L->head != NULL) {
-		p = L->head;
-		L->head = L->head->next;
-		free(p);
-		p = NULL;
-	}
+	system("notepad.exe 03.txt");
 }
 
 double distance(SLL* p)
