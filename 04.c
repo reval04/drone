@@ -1,31 +1,15 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <math.h>
-#include <string.h>
+#include "drone.h"
 
 #define MAX 5
 #define MAX_B 250
 
-typedef struct singleLinkedList
-{
-	char point[11];
-	double d;
-	double k;
-	double batteryCon;
-	struct singleLinkedList* next;
-}SLL;
-
-SLL* top = NULL;
-
-void push(char* wp, double item, double k, double bc);
-SLL* pop();
-char* navigate(SLL* t);
-int isStackEmpty();
+SLL4* top = NULL;
 
 int main()
 {
+	makeWayPoint();
+	arrangeWayPoint();
+	makeDistancePerBatteryTable();
 	FILE* fp4 = fopen("03.txt", "r");
 	FILE* fp4w = fopen("04.txt", "w");
 	if (fp4 == NULL || fp4w == NULL)
@@ -59,7 +43,7 @@ int main()
 			push(p, distance, k, batteryConsumed);
 			totalBatteryCon += batteryConsumed;
 			fprintf(fp4w, "%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, distance, k, batteryConsumed, totalBatteryCon);
-			fprintf(fp4w, "%10s %10c %10c\n", "NORMAL", '-', '-');
+			fprintf(fp4w, "%10s %10c %10c\n", "NORMAL", '-', '-'); fflush(fp4w);
 			printf("%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, distance, k, batteryConsumed, totalBatteryCon);
 			printf("%10s %10c %10c\n", "NORMAL", '-', '-');
 		}
@@ -68,7 +52,7 @@ int main()
 			totalBatteryCon += batteryConsumed;
 			na = navigate(top);
 			fprintf(fp4w, "%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, distance, k, batteryConsumed, totalBatteryCon);
-			fprintf(fp4w, "%10s %10s %10s\n", "FAILURE", "미션실패", na);
+			fprintf(fp4w, "%10s %10s %10s\n", "FAILURE", "미션실패", na); fflush(fp4w);
 			printf("%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, distance, k, batteryConsumed, totalBatteryCon);
 			printf("%10s %10s %10s\n", "FAILURE", "미션실패", na);
 			free(na);
@@ -76,13 +60,11 @@ int main()
 		}
 	}
 
-	fclose(fp4);
-
 	if (top != NULL)
 	{
-		SLL* below = top->next;
-		SLL* getPop;
-		char revPoint[5];
+		SLL4* below = top->next;
+		SLL4* getPop;
+		char revPoint[12];
 		char ret[20];
 
 		while (!isStackEmpty())
@@ -99,12 +81,20 @@ int main()
 			fprintf(fp4w, "%10s %10s %10s\n", "RECOVERY", "역추적", ret);
 			printf("%10s %10s %10s\n", "RECOVERY", "역추적", ret);
 
-			free(getPop);
+			if (below == NULL)
+			{
+				break;
+			}
+			below = below->next;
 		}
 	}
+	while (!isStackEmpty())
+	{
+		free(pop());
+	}
 
+	fclose(fp4);
 	fclose(fp4w);
-
 	system("notepad.exe 04.txt");
 
 	return 0;
@@ -118,7 +108,7 @@ int isStackEmpty()
 
 void push(char* wp, double item, double k, double bc)
 {
-	SLL* temp = (SLL*)malloc(sizeof(SLL));
+	SLL4* temp = (SLL4*)malloc(sizeof(SLL4));
 
 	strcpy(temp->point, wp);
 	temp->d = item;
@@ -128,9 +118,9 @@ void push(char* wp, double item, double k, double bc)
 	top = temp;
 }
 
-SLL* pop()
+SLL4* pop()
 {
-	SLL* temp = top;
+	SLL4* temp = top;
 
 	if (isStackEmpty())
 	{
@@ -144,31 +134,20 @@ SLL* pop()
 	}
 }
 
-char* navigate(SLL* t)
+char* navigate(SLL4* t)
 {
+	char* nav = (char*)malloc(20 * MAX * sizeof(char));
+	nav[0] = '\0';
 
-	char* nav = (char*)malloc(100 * sizeof(char));
-	if (nav == NULL) return NULL; 
-
-	nav[0] = '\0'; 
-
-	SLL* curr = t;
-	if (curr != NULL)
+	SLL4* curr = t;
+	while (curr != NULL)
 	{
-		char temp[4] = { 0, };
-		temp[0] = curr->point[1];
-		strcat(nav, temp);
-
-		while (curr != NULL)
+		strcat(nav, curr->point);
+		if (curr->next != NULL)
 		{
 			strcat(nav, "→");
-
-			temp[0] = curr->point[0];
-			temp[1] = '\0'; 
-			strcat(nav, temp);
-
-			curr = curr->next;
 		}
+		curr = curr->next;
 	}
 
 	return nav;
