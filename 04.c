@@ -30,7 +30,7 @@ int main()
 	FILE* fp4w = fopen("04.txt", "w");
 	if (fp4 == NULL || fp4w == NULL)
 	{
-		printf("ÆÄÀÏÀÌ Á¦´ë·Î ¿­¸®Áö ¾ÊÀ½\n");
+		printf("íŒŒì¼ì´ ì œëŒ€ë¡œ ì—´ë¦¬ì§€ ì•ŠìŒ\n");
 		return -1;
 	}
 
@@ -41,7 +41,7 @@ int main()
 	double totalDis = 0, totalBatteryCon = 0;
 
 	
-	char* menu[] = { "±¸°£", "°Å¸®(m)", " k", "¹èÅÍ¸® ¼Ò¸ð", "´©Àû ¼Ò¸ð·®", "»óÅÂ", "ÀÌº¥Æ®", "¾ÈÁ¤È¸±Í °æ·Î"};
+	char* menu[] = { "êµ¬ê°„", "ê±°ë¦¬(m)", " k", "ë°°í„°ë¦¬ ì†Œëª¨", "ëˆ„ì  ì†Œëª¨ëŸ‰", "ìƒíƒœ", "ì´ë²¤íŠ¸", "ì•ˆì •íšŒê·€ ê²½ë¡œ"};
 	fprintf(fp4w, "%10s %10s %10s %11s %11s %10s %10s %11s\n", 
 		*(menu + 0), *(menu + 1), *(menu + 2), *(menu + 3), *(menu + 4), *(menu + 5), *(menu + 6), *(menu + 7));
 	printf("%10s %10s %10s %11s %11s %10s %10s %11s\n",
@@ -59,7 +59,7 @@ int main()
 			push(p, distance, k, batteryConsumed);
 			totalBatteryCon += batteryConsumed;
 			fprintf(fp4w, "%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, distance, k, batteryConsumed, totalBatteryCon);
-			fprintf(fp4w, "%10s %10c %10c\n", "NORMAL", '-', '-');
+			fprintf(fp4w, "%10s %10c %10c\n", "NORMAL", '-', '-'); fflush(fp4w);
 			printf("%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, distance, k, batteryConsumed, totalBatteryCon);
 			printf("%10s %10c %10c\n", "NORMAL", '-', '-');
 		}
@@ -68,21 +68,19 @@ int main()
 			totalBatteryCon += batteryConsumed;
 			na = navigate(top);
 			fprintf(fp4w, "%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, distance, k, batteryConsumed, totalBatteryCon);
-			fprintf(fp4w, "%10s %10s %10s\n", "FAILURE", "¹Ì¼Ç½ÇÆÐ", na);
+			fprintf(fp4w, "%10s %10s %10s\n", "FAILURE", "ë¯¸ì…˜ì‹¤íŒ¨", na); fflush(fp4w);
 			printf("%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, distance, k, batteryConsumed, totalBatteryCon);
-			printf("%10s %10s %10s\n", "FAILURE", "¹Ì¼Ç½ÇÆÐ", na);
+			printf("%10s %10s %10s\n", "FAILURE", "ë¯¸ì…˜ì‹¤íŒ¨", na);
 			free(na);
 			break;
 		}
 	}
 
-	fclose(fp4);
-
 	if (top != NULL)
 	{
 		SLL* below = top->next;
 		SLL* getPop;
-		char revPoint[5];
+		char revPoint[12];
 		char ret[20];
 
 		while (!isStackEmpty())
@@ -94,11 +92,15 @@ int main()
 			fprintf(fp4w, "%10s %10c %10c %10c %10.1lf", revPoint, '-', '-', '-', totalBatteryCon);
 			printf("%10s %10c %10c %10c %10.1lf", revPoint, '-', '-', '-', totalBatteryCon);
 
-			sprintf(ret, "%c¡æ%c", getPop->point[1], getPop->point[0]);
+			sprintf(ret, "%câ†’%c", getPop->point[1], getPop->point[0]);
 
-			fprintf(fp4w, "%10s %10s %10s\n", "RECOVERY", "¿ªÃßÀû", ret);
-			printf("%10s %10s %10s\n", "RECOVERY", "¿ªÃßÀû", ret);
+			fprintf(fp4w, "%10s %10s %10s\n", "RECOVERY", "ì—­ì¶”ì ", ret);
+			printf("%10s %10s %10s\n", "RECOVERY", "ì—­ì¶”ì ", ret);
 
+			if (below == NULL)
+			{
+				break;
+			}
 			below = below->next;
 		}
 	}
@@ -107,8 +109,8 @@ int main()
 		free(pop());
 	}
 
+	fclose(fp4);
 	fclose(fp4w);
-
 	system("notepad.exe 04.txt");
 
 	return 0;
@@ -138,7 +140,7 @@ SLL* pop()
 
 	if (isStackEmpty())
 	{
-		printf("½ºÅÃÀÌ ºñ¾ú½À´Ï´Ù. \n");
+		printf("ìŠ¤íƒì´ ë¹„ì—ˆìŠµë‹ˆë‹¤. \n");
 		return 0;
 	}
 	else
@@ -150,7 +152,7 @@ SLL* pop()
 
 char* navigate(SLL* t)
 {
-	char* nav = (char *)malloc(3 * MAX * sizeof(char));
+	char* nav = (char *)malloc(20 * MAX * sizeof(char));
 	nav[0] = '\0';
 
 	SLL* curr = t;
@@ -159,7 +161,7 @@ char* navigate(SLL* t)
 		strcat(nav, curr->point);
 		if (curr->next != NULL)
 		{
-			strcat(nav, "¡æ");
+			strcat(nav, "â†’");
 		}
 		curr = curr->next;
 	}
