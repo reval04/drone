@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-#include <locale.h>
 
 #define MAX 5
 
@@ -21,13 +20,12 @@ typedef struct singleLinkedListHead
 
 SLLH* createSingleLinkedList();
 void insertLastNode(SLLH* L, int x, int y);
-double distance(SLLH* p);
+double distance(SLL* p);
 void printDistance(double* d);
+void freeLinkedList(SLLH* L);
 
 int main()
 {
-	setlocale(LC_ALL, "korean");
-
 	double dis[MAX - 1];
 	FILE* fp3r = fopen("02.txt", "r");
 	SLLH* nodeHead = createSingleLinkedList();
@@ -50,6 +48,9 @@ int main()
 	}
 
 	printDistance(dis);
+	freeLinkedList(nodeHead);
+	
+	system("03.txt notepad.exe");
 }
 
 SLLH* createSingleLinkedList()
@@ -78,6 +79,17 @@ void insertLastNode(SLLH* L, int x, int y)
 	temp->next = newNode;
 }
 
+void freeLinkedList(SLLH* L)
+{
+	SLL* p;
+	while (L->head != NULL) {
+		p = L->head;
+		L->head = L->head->next;
+		free(p);
+		p = NULL;
+	}
+}
+
 double distance(SLL* p)
 {
 	SLL* cur = p;
@@ -92,7 +104,7 @@ double distance(SLL* p)
 void printDistance(double* d)
 {
 	char* waypoint[] = { "AB", "BC", "CD", "DE" };
-	char* menu[] = { "±¸°£", "°Å¸®(m)", "k ", "¹èÅÍ¸® ¼Ò¸ð" };
+	char* menu[] = { "êµ¬ê°„", "ê±°ë¦¬(m)", " k", "ë°°í„°ë¦¬ ì†Œëª¨" };
 	FILE* fp3w = fopen("03.txt", "w");
 
 	fprintf(fp3w, "%10s %10s %10s %11s\n", *(menu + 0), *(menu + 1), *(menu + 2), *(menu + 3));
