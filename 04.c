@@ -40,14 +40,14 @@ int main()
 	int i;
 	double totalDis = 0, totalBatteryCon = 0;
 
-	
-	char* menu[] = { "구간", "거리(m)", " k", "배터리 소모", "누적 소모량", "상태", "이벤트", "안정회귀 경로"};
-	fprintf(fp4w, "%10s %10s %10s %11s %11s %10s %10s %11s\n", 
+
+	char* menu[] = { "구간", "거리(m)", " k", "배터리 소모", "누적 소모량", "상태", "이벤트", "안정회귀 경로" };
+	fprintf(fp4w, "%10s %10s %10s %11s %11s %10s %10s %11s\n",
 		*(menu + 0), *(menu + 1), *(menu + 2), *(menu + 3), *(menu + 4), *(menu + 5), *(menu + 6), *(menu + 7));
 	printf("%10s %10s %10s %11s %11s %10s %10s %11s\n",
 		*(menu + 0), *(menu + 1), *(menu + 2), *(menu + 3), *(menu + 4), *(menu + 5), *(menu + 6), *(menu + 7));
 
-	
+
 	char dummy[256];
 	fgets(dummy, sizeof(dummy), fp4);
 
@@ -59,7 +59,7 @@ int main()
 			push(p, distance, k, batteryConsumed);
 			totalBatteryCon += batteryConsumed;
 			fprintf(fp4w, "%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, distance, k, batteryConsumed, totalBatteryCon);
-			fprintf(fp4w, "%10s %10c %10c\n", "NORMAL", '-', '-'); fflush(fp4w);
+			fprintf(fp4w, "%10s %10c %10c\n", "NORMAL", '-', '-');
 			printf("%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, distance, k, batteryConsumed, totalBatteryCon);
 			printf("%10s %10c %10c\n", "NORMAL", '-', '-');
 		}
@@ -68,7 +68,7 @@ int main()
 			totalBatteryCon += batteryConsumed;
 			na = navigate(top);
 			fprintf(fp4w, "%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, distance, k, batteryConsumed, totalBatteryCon);
-			fprintf(fp4w, "%10s %10s %10s\n", "FAILURE", "미션실패", na); fflush(fp4w);
+			fprintf(fp4w, "%10s %10s %10s\n", "FAILURE", "미션실패", na);
 			printf("%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, distance, k, batteryConsumed, totalBatteryCon);
 			printf("%10s %10s %10s\n", "FAILURE", "미션실패", na);
 			free(na);
@@ -76,18 +76,20 @@ int main()
 		}
 	}
 
+	fclose(fp4);
+
 	if (top != NULL)
 	{
 		SLL* below = top->next;
 		SLL* getPop;
-		char revPoint[12];
+		char revPoint[5];
 		char ret[20];
 
 		while (!isStackEmpty())
 		{
 			getPop = pop();
 			totalBatteryCon += getPop->batteryCon;
-			
+
 			sprintf(revPoint, "%c%c", getPop->point[1], getPop->point[0]);
 			fprintf(fp4w, "%10s %10c %10c %10c %10.1lf", revPoint, '-', '-', '-', totalBatteryCon);
 			printf("%10s %10c %10c %10c %10.1lf", revPoint, '-', '-', '-', totalBatteryCon);
@@ -97,20 +99,12 @@ int main()
 			fprintf(fp4w, "%10s %10s %10s\n", "RECOVERY", "역추적", ret);
 			printf("%10s %10s %10s\n", "RECOVERY", "역추적", ret);
 
-			if (below == NULL)
-			{
-				break;
-			}
-			below = below->next;
+			free(getPop);
 		}
 	}
-	while (!isStackEmpty())
-	{
-		free(pop());
-	}
 
-	fclose(fp4);
 	fclose(fp4w);
+
 	system("notepad.exe 04.txt");
 
 	return 0;
@@ -152,19 +146,30 @@ SLL* pop()
 
 char* navigate(SLL* t)
 {
-	char* nav = (char *)malloc(20 * MAX * sizeof(char));
-	nav[0] = '\0';
+
+	char* nav = (char*)malloc(100 * sizeof(char));
+	if (nav == NULL) return NULL; 
+
+	nav[0] = '\0'; 
 
 	SLL* curr = t;
-	while (curr != NULL)
+	if (curr != NULL)
 	{
-		strcat(nav, curr->point);
-		if (curr->next != NULL)
+		char temp[4] = { 0, };
+		temp[0] = curr->point[1];
+		strcat(nav, temp);
+
+		while (curr != NULL)
 		{
 			strcat(nav, "→");
+
+			temp[0] = curr->point[0];
+			temp[1] = '\0'; 
+			strcat(nav, temp);
+
+			curr = curr->next;
 		}
-		curr = curr->next;
 	}
-	
+
 	return nav;
 }
