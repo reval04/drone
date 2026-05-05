@@ -1,0 +1,118 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
+#include <locale.h>
+
+#define MAX 5
+
+typedef struct singleLinkedList
+{
+	int x;
+	int y;
+	struct singleLinkedList* next;
+}SLL;
+
+typedef struct singleLinkedListHead
+{
+	SLL* head;
+}SLLH;
+
+SLLH* createSingleLinkedList();
+void insertLastNode(SLLH* L, int x, int y);
+double distance(SLLH* p);
+void printDistance(double* d);
+
+int main()
+{
+	setlocale(LC_ALL, "korean");
+
+	double dis[MAX - 1];
+	FILE* fp3r = fopen("02.txt", "r");
+	SLLH* nodeHead = createSingleLinkedList();
+
+	int i;
+	int x, y;
+	for (i = 0; i < MAX; i++)
+	{
+		fscanf(fp3r, "%8d %8d", &x, &y);
+		insertLastNode(nodeHead, x, y);
+	}
+	fclose(fp3r);
+
+	SLL* temp = nodeHead->head;
+	i = 0;
+	for (i = 0; i < MAX - 1; i++)
+	{
+		dis[i] = distance(temp);
+		temp = temp->next;
+	}
+
+	printDistance(dis);
+}
+
+SLLH* createSingleLinkedList()
+{
+	SLLH* h;
+	h = (SLLH*)malloc(sizeof(SLLH));
+	h->head = NULL;
+	return h;
+}
+
+void insertLastNode(SLLH* L, int x, int y)
+{
+	SLL* newNode;
+	SLL* temp;
+	newNode = (SLL*)malloc(sizeof(SLL));
+	newNode->x = x;
+	newNode->y = y;
+	newNode->next = NULL;
+	if (L->head == NULL) {
+		L->head = newNode;
+		return;
+	}
+
+	temp = L->head;
+	while (temp->next != NULL) temp = temp->next;
+	temp->next = newNode;
+}
+
+double distance(SLL* p)
+{
+	SLL* cur = p;
+	SLL* nt = cur->next;
+
+	double x = cur->x - nt->x;
+	double y = cur->y - nt->y;
+
+	return sqrt(x * x + y * y);
+}
+
+void printDistance(double* d)
+{
+	char* waypoint[] = { "AB", "BC", "CD", "DE" };
+	char* menu[] = { "구간", "거리(m)", "k ", "배터리 소모" };
+	FILE* fp3w = fopen("03.txt", "w");
+
+	fprintf(fp3w, "%s\t %s\t %s\t %s\t\n", menu + 0, menu + 1, menu + 2, menu + 3);
+	printf("%s\t %s\t %s\t %s\t\n", menu + 0, menu + 1, menu + 2, menu + 3);
+
+	int i;
+	double k, batteryConsumed;
+	double totaldis = 0, totalBatteryCon = 0;
+	for (i = 0; i < MAX - 1; i++)
+	{
+		(*(d + i) > 100.0) ? (k = 1.7) : (k = 1.5);
+		batteryConsumed = k * d[i];
+		fprintf(fp3w, "%s\t %.1lf\t %.1lf\t %.1lf\t\n", waypoint + i, *(d + i), k, batteryConsumed);
+		printf("%s\t %.1lf\t %.1lf\t %.1lf\t\n", waypoint + i, *(d + i), k, batteryConsumed);
+		totaldis += *(d + i);
+		totalBatteryCon += batteryConsumed;
+	}
+
+	fprintf(fp3w, "TOTAL\t %.1lf\t -\t %.1lf\t\n", totaldis, totalBatteryCon);
+	printf("TOTAL\t %.1lf\t -\t %.1lf\t\n", totaldis, totalBatteryCon);
+
+	fclose(fp3w);
+}
