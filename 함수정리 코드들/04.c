@@ -22,7 +22,7 @@ int main() {
     for (int i = 0; i < MAX - 1; i++) {
         if (fscanf(fp4, "%10s %10lf %10lf %11lf", p, &dis, &k, &batteryConsumed) != 4) break;
 
-        if (totalBatteryCon + batteryConsumed < MAX_B / 2.0)
+        if (totalBatteryCon + batteryConsumed < MAX_BATTERY / 2.0)
         {
             if (i == MAX - 2)
             {
