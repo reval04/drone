@@ -1,7 +1,5 @@
 #include "drone.h"
 
-#define MAX 5
-
 void makeWayPoint()
 {
 	srand((unsigned int)time(NULL));

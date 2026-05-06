@@ -11,37 +11,54 @@ int main() {
     if (!fp4 || !fp4w) return -1;
 
     char p[11], temp[256];
-    double dis, k, bc, totalBC = 0;
+    double dis, k, batteryConsumed, totalBatteryCon  = 0;
 
     fgets(temp, sizeof(temp), fp4); // 헤더 스킵
-
-    printIndex(fp42w);
+    fprintf(fp4w, "%10s %10s %10s %11s %11s %10s %10s %11s\n",
+        "구간", "거리(m)", " k", "배터리 소모", "누적 소모량", "상태", "이벤트", "안전회귀 경로");
+    fprintf(stdout, "%10s %10s %10s %11s %11s %10s %10s %11s\n",
+        "구간", "거리(m)", " k", "배터리 소모", "누적 소모량", "상태", "이벤트", "안전회귀 경로");
 
     for (int i = 0; i < MAX - 1; i++) {
-        if (fscanf(fp4, "%10s %10lf %10lf %11lf", p, &dis, &k, &bc) != 4) break;
+        if (fscanf(fp4, "%10s %10lf %10lf %11lf", p, &dis, &k, &batteryConsumed) != 4) break;
 
-        if (totalBC + bc < MAX_B / 2.0) {
-            push(p, dis, k, bc);
-            totalBC += bc;
-            fprintf(fp4w, "%10s %10.1lf %10.1lf %10.1lf %10.1lf %10s %10c %10c\n", p, dis, k, bc, totalBC, "NORMAL", '-', '-');
-            fprintf(stdout, "%10s %10.1lf %10.1lf %10.1lf %10.1lf %10s %10c %10c\n", p, dis, k, bc, totalBC, "NORMAL", '-', '-');
+        if (totalBatteryCon + batteryConsumed < MAX_B / 2.0)
+        {
+            if (i == MAX - 2)
+            {
+                push(p, dis, k, batteryConsumed);
+                totalBatteryCon += batteryConsumed;
+                fprintf(fp4w, "%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, dis, k, batteryConsumed, totalBatteryCon);
+                fprintf(fp4w, "%10s %10s %10c\n", "SUCCESS", "폭탄 투하", '-');
+                printf("%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, dis, k, batteryConsumed, totalBatteryCon);
+                printf("%10s %10s %10c\n", "SUCCESS", "폭탄 투하", '-');
+            }
+            else
+            {
+                push(p, dis, k, batteryConsumed);
+                totalBatteryCon += batteryConsumed;
+                fprintf(fp4w, "%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, dis, k, batteryConsumed, totalBatteryCon);
+                fprintf(fp4w, "%10s %10c %10c\n", "NORMAL", '-', '-'); fflush(fp4w);
+                printf("%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, dis, k, batteryConsumed, totalBatteryCon);
+                printf("%10s %10c %10c\n", "NORMAL", '-', '-');
+            }
         }
         else {
-            totalBC += bc;
+            totalBatteryCon  += batteryConsumed;
             char* na = navigate(NULL);
-            fprintf(fp4w, "%10s %10.1lf %10.1lf %10.1lf %10.1lf %10s %10s %10s\n", p, dis, k, bc, totalBC, "FAILURE", "미션실패", na);
-            fprintf(stdout, "%10s %10.1lf %10.1lf %10.1lf %10.1lf %10s %10s %10s\n", p, dis, k, bc, totalBC, "FAILURE", "미션실패", na);
+            fprintf(fp4w, "%10s %10.1lf %10.1lf %10.1lf %10.1lf %10s %10s %10s\n", p, dis, k, batteryConsumed, totalBatteryCon , "FAILURE", "미션실패", na);
+            fprintf(stdout, "%10s %10.1lf %10.1lf %10.1lf %10.1lf %10s %10s %10s\n", p, dis, k, batteryConsumed, totalBatteryCon , "FAILURE", "미션실패", na);
             free(na); break;
         }
     }
 
     while (!isStackEmpty()) {
         SLL4* node = pop();
-        totalBC += node->batteryCon;
+        totalBatteryCon  += node->batteryCon;
         char rev[3] = { node->point[1], node->point[0], '\0' };
         char path[10]; sprintf(path, "%c→%c", node->point[1], node->point[0]);
-        fprintf(fp4w, "%10s %10c %10c %10c %10.1lf %10s %10s %10s\n", rev, '-', '-', '-', totalBC, "RECOVERY", "역추적", path);
-        fprintf(stdout, "%10s %10c %10c %10c %10.1lf %10s %10s %10s\n", rev, '-', '-', '-', totalBC, "RECOVERY", "역추적", path);
+        fprintf(fp4w, "%10s %10c %10c %10c %10.1lf %10s %10s %10s\n", rev, '-', '-', '-', totalBatteryCon , "RECOVERY", "역추적", path);
+        fprintf(stdout, "%10s %10c %10c %10c %10.1lf %10s %10s %10s\n", rev, '-', '-', '-', totalBatteryCon , "RECOVERY", "역추적", path);
         free(node);
     }
 
