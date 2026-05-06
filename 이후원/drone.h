@@ -29,7 +29,7 @@ typedef struct singleLinkedList_4
 }SLL4;
 
 SLLH* createSingleLinkedList();
-void insertLastNode(SLLH* L, int x, int y);
+void insertLastNode(SLLH* L, int x, int y, char n);
 void bubbleSort(SLLH* L);
 void freeLinkedList(SLLH* L);
 void pinPointing(SLLH* L);
