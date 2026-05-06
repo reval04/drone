@@ -8,9 +8,9 @@
 
 #define MAX 5
 #define MAX_RAND 500
-#define MAX_B 20000
+#define MAX_BATTERY 3500
 
-// --- [êµ¬ì¡°ì²´ ì •ì˜] ---
+// --- [±¸Á¶Ã¼ Á¤ÀÇ] ---
 typedef struct singleLinkedList {
     char name;
     int x;
@@ -30,25 +30,25 @@ typedef struct singleLinkedList_4 {
     struct singleLinkedList_4* next;
 } SLL4;
 
-// --- [í•¨ìˆ˜ ì„ ì–¸] ---
-// 01, 02, 03 ì‹¤í–‰ í•¨ìˆ˜
+// --- [ÇÔ¼ö ¼±¾ğ] ---
+// 01, 02, 03 ½ÇÇà ÇÔ¼ö
 void makeWayPoint();
 void arrangeWayPoint();
 void makeDistancePerBatteryTable();
 
-// ë¦¬ìŠ¤íŠ¸ ë° ì•Œê³ ë¦¬ì¦˜ (func.c)
+// ¸®½ºÆ® ¹× ¾Ë°í¸®Áò (func.c)
 SLLH* createSingleLinkedList();
 void insertLastNode(SLLH* L, int x, int y, char n);
 void bubbleSort(SLLH* L);
 void pinPointing(SLLH* L);
 void freeLinkedList(SLLH* L);
 
-// ê³„ì‚° ë° ì¶œë ¥ (func.c)
+// °è»ê ¹× Ãâ·Â (func.c)
 double distance(SLL* p);
 void printDistance(double* d, SLL* t);
-void printIndex(FILE * p);
+void printIndex(FILE* p);
 
-// ìŠ¤íƒ (func.c)
+// ½ºÅÃ (func.c)
 void push(char* wp, double d, double k, double bc);
 SLL4* pop();
 int isStackEmpty();
