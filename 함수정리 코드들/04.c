@@ -14,10 +14,8 @@ int main() {
     double dis, k, bc, totalBC = 0;
 
     fgets(temp, sizeof(temp), fp4); // 헤더 스킵
-    fprintf(fp4w, "%10s %10s %10s %11s %11s %10s %10s %11s\n",
-        "구간", "거리(m)", " k", "배터리 소모", "누적 소모량", "상태", "이벤트", "안전회귀 경로");
-    fprintf(stdout, "%10s %10s %10s %11s %11s %10s %10s %11s\n",
-        "구간", "거리(m)", " k", "배터리 소모", "누적 소모량", "상태", "이벤트", "안전회귀 경로");
+
+    printIndex(fp42w);
 
     for (int i = 0; i < MAX - 1; i++) {
         if (fscanf(fp4, "%10s %10lf %10lf %11lf", p, &dis, &k, &bc) != 4) break;
