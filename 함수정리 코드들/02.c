@@ -1,17 +1,16 @@
 #include "drone.h"
 
-
 void arrangeWayPoint()
 {
 	FILE* fp2 = fopen("01.txt", "r");
 	SLLH* head = createSingleLinkedList();
 	SLL* temp;
 
-	int x, y;
-	for (int i = 0; i < MAX; i++)
+	int i, x, y;
+	for (i = 0; i < MAX; i++)
 	{
 		fscanf(fp2, "%8d %8d", &x, &y);
-		insertLastNode(head, x, y);
+		insertLastNode(head, x, y, NULL);
 	}
 	fclose(fp2);
 
@@ -22,8 +21,8 @@ void arrangeWayPoint()
 
 	while (temp != NULL)
 	{
-		fprintf(fp2w, "%8d %8d\n", temp->x, temp->y);
-		printf("%8d %8d\n", temp->x, temp->y);
+		fprintf(fp2w, "%8c %8d %8d\n", temp->name, temp->x, temp->y);
+		printf("%8c %8d %8d\n", temp->name, temp->x, temp->y);
 		temp = temp->next;
 	}
 	fclose(fp2w);

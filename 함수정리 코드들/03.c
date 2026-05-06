@@ -9,10 +9,11 @@ void makeDistancePerBatteryTable()
 
 	int i;
 	int x, y;
+	char name;
 	for (i = 0; i < MAX; i++)
 	{
-		fscanf(fp3r, "%8d %8d", &x, &y);
-		insertLastNode(nodeHead, x, y);
+		fscanf(fp3r, " %c %8d %8d",&name, &x, &y);
+		insertLastNode(nodeHead, x, y, name);
 	}
 	fclose(fp3r);
 

@@ -9,22 +9,31 @@ SLLH* createSingleLinkedList() {
     return h;
 }
 
-void insertLastNode(SLLH* L, int x, int y) {
-    SLL* newNode = (SLL*)malloc(sizeof(SLL));
-    if (!newNode) return;
-    newNode->x = x; newNode->y = y; newNode->next = NULL;
+void insertLastNode(SLLH* L, int x, int y, char n)
+{
+    int count = 1;
+    SLL* newNode;
+    SLL* temp;
+    newNode = (SLL*)malloc(sizeof(SLL));
+    newNode->x = x;
+    newNode->y = y;
+    newNode->name = n;
+    newNode->next = NULL;
     if (L->head == NULL) {
-        newNode->name = 'A';
         L->head = newNode;
+        return;
     }
-    else {
-        SLL* temp = L->head;
-        int count = 1;
-        while (temp->next != NULL) { temp = temp->next; count++; }
-        temp->next = newNode;
-        newNode->name = 'A' + count;
+
+    temp = L->head;
+    while (temp->next != NULL)
+    {
+        temp = temp->next;
+        count++;
     }
+    temp->next = newNode;
+    count++;
 }
+
 
 void bubbleSort(SLLH* L) {
     if (!L || !L->head) return;

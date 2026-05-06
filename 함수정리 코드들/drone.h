@@ -38,7 +38,7 @@ void makeDistancePerBatteryTable();
 
 // 리스트 및 알고리즘 (func.c)
 SLLH* createSingleLinkedList();
-void insertLastNode(SLLH* L, int x, int y);
+void insertLastNode(SLLH* L, int x, int y, char n);
 void bubbleSort(SLLH* L);
 void pinPointing(SLLH* L);
 void freeLinkedList(SLLH* L);

@@ -10,10 +10,10 @@ int main() {
     FILE* fp4w = fopen("04.txt", "w");
     if (!fp4 || !fp4w) return -1;
 
-    char p[11], dummy[256];
+    char p[11], temp[256];
     double dis, k, bc, totalBC = 0;
 
-    fgets(dummy, sizeof(dummy), fp4); // 헤더 스킵
+    fgets(temp, sizeof(temp), fp4); // 헤더 스킵
     fprintf(fp4w, "%10s %10s %10s %11s %11s %10s %10s %11s\n",
         "구간", "거리(m)", " k", "배터리 소모", "누적 소모량", "상태", "이벤트", "안전회귀 경로");
     fprintf(stdout, "%10s %10s %10s %11s %11s %10s %10s %11s\n",
