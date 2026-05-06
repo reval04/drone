@@ -46,6 +46,7 @@ void freeLinkedList(SLLH* L);
 // 계산 및 출력 (func.c)
 double distance(SLL* p);
 void printDistance(double* d, SLL* t);
+void printIndex(FILE * p);
 
 // 스택 (func.c)
 void push(char* wp, double d, double k, double bc);
