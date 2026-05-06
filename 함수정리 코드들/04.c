@@ -1,7 +1,7 @@
 #include "drone.h"
 
 int main() {
-    // 1~3´Ü°è ½ÇÇà
+    // 1~3ë‹¨ê³„ ì‹¤í–‰
     makeWayPoint();
     arrangeWayPoint();
     makeDistancePerBatteryTable();
@@ -13,11 +13,11 @@ int main() {
     char p[11], temp[256];
     double dis, k, batteryConsumed, totalBatteryCon  = 0;
 
-    fgets(temp, sizeof(temp), fp4); // Çì´õ ½ºÅµ
+    fgets(temp, sizeof(temp), fp4); // í—¤ë” ìŠ¤í‚µ
     fprintf(fp4w, "%10s %10s %10s %11s %11s %10s %10s %11s\n",
-        "±¸°£", "°Å¸®(m)", " k", "¹èÅÍ¸® ¼Ò¸ğ", "´©Àû ¼Ò¸ğ·®", "»óÅÂ", "ÀÌº¥Æ®", "¾ÈÀüÈ¸±Í °æ·Î");
+        "êµ¬ê°„", "ê±°ë¦¬(m)", " k", "ë°°í„°ë¦¬ ì†Œëª¨", "ëˆ„ì  ì†Œëª¨ëŸ‰", "ìƒíƒœ", "ì´ë²¤íŠ¸", "ì•ˆì „íšŒê·€ ê²½ë¡œ");
     fprintf(stdout, "%10s %10s %10s %11s %11s %10s %10s %11s\n",
-        "±¸°£", "°Å¸®(m)", " k", "¹èÅÍ¸® ¼Ò¸ğ", "´©Àû ¼Ò¸ğ·®", "»óÅÂ", "ÀÌº¥Æ®", "¾ÈÀüÈ¸±Í °æ·Î");
+        "êµ¬ê°„", "ê±°ë¦¬(m)", " k", "ë°°í„°ë¦¬ ì†Œëª¨", "ëˆ„ì  ì†Œëª¨ëŸ‰", "ìƒíƒœ", "ì´ë²¤íŠ¸", "ì•ˆì „íšŒê·€ ê²½ë¡œ");
 
     for (int i = 0; i < MAX - 1; i++) {
         if (fscanf(fp4, "%10s %10lf %10lf %11lf", p, &dis, &k, &batteryConsumed) != 4) break;
@@ -29,9 +29,9 @@ int main() {
                 push(p, dis, k, batteryConsumed);
                 totalBatteryCon += batteryConsumed;
                 fprintf(fp4w, "%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, dis, k, batteryConsumed, totalBatteryCon);
-                fprintf(fp4w, "%10s %10s %10c\n", "SUCCESS", "ÆøÅº ÅõÇÏ", '-');
+                fprintf(fp4w, "%10s %10s %10c\n", "SUCCESS", "í­íƒ„ íˆ¬í•˜", '-');
                 printf("%10s %10.1lf %10.1lf %10.1lf %10.1lf", p, dis, k, batteryConsumed, totalBatteryCon);
-                printf("%10s %10s %10c\n", "SUCCESS", "ÆøÅº ÅõÇÏ", '-');
+                printf("%10s %10s %10c\n", "SUCCESS", "í­íƒ„ íˆ¬í•˜", '-');
             }
             else
             {
@@ -46,8 +46,8 @@ int main() {
         else {
             totalBatteryCon  += batteryConsumed;
             char* na = navigate(NULL);
-            fprintf(fp4w, "%10s %10.1lf %10.1lf %10.1lf %10.1lf %10s %10s %10s\n", p, dis, k, batteryConsumed, totalBatteryCon , "FAILURE", "¹Ì¼Ç½ÇÆĞ", na);
-            fprintf(stdout, "%10s %10.1lf %10.1lf %10.1lf %10.1lf %10s %10s %10s\n", p, dis, k, batteryConsumed, totalBatteryCon , "FAILURE", "¹Ì¼Ç½ÇÆĞ", na);
+            fprintf(fp4w, "%10s %10.1lf %10.1lf %10.1lf %10.1lf %10s %10s %10s\n", p, dis, k, batteryConsumed, totalBatteryCon , "FAILURE", "ë¯¸ì…˜ì‹¤íŒ¨", na);
+            fprintf(stdout, "%10s %10.1lf %10.1lf %10.1lf %10.1lf %10s %10s %10s\n", p, dis, k, batteryConsumed, totalBatteryCon , "FAILURE", "ë¯¸ì…˜ì‹¤íŒ¨", na);
             free(na); break;
         }
     }
@@ -56,9 +56,9 @@ int main() {
         SLL4* node = pop();
         totalBatteryCon  += node->batteryCon;
         char rev[3] = { node->point[1], node->point[0], '\0' };
-        char path[10]; sprintf(path, "%c¡æ%c", node->point[1], node->point[0]);
-        fprintf(fp4w, "%10s %10c %10c %10c %10.1lf %10s %10s %10s\n", rev, '-', '-', '-', totalBatteryCon , "RECOVERY", "¿ªÃßÀû", path);
-        fprintf(stdout, "%10s %10c %10c %10c %10.1lf %10s %10s %10s\n", rev, '-', '-', '-', totalBatteryCon , "RECOVERY", "¿ªÃßÀû", path);
+        char path[10]; sprintf(path, "%câ†’%c", node->point[1], node->point[0]);
+        fprintf(fp4w, "%10s %10c %10c %10c %10.1lf %10s %10s %10s\n", rev, '-', '-', '-', totalBatteryCon , "RECOVERY", "ì—­ì¶”ì ", path);
+        fprintf(stdout, "%10s %10c %10c %10c %10.1lf %10s %10s %10s\n", rev, '-', '-', '-', totalBatteryCon , "RECOVERY", "ì—­ì¶”ì ", path);
         free(node);
     }
 
