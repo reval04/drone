@@ -1,8 +1,8 @@
 #include "drone.h"
 
-static SLL4* top = NULL; // ½ºÅÃ °ü¸® º¯¼ö
+static SLL4* top = NULL; // ìŠ¤íƒ ê´€ë¦¬ ë³€ìˆ˜
 
-// --- [¸®½ºÆ® ¹× À¯Æ¿¸®Æ¼] ---
+// --- [ë¦¬ìŠ¤íŠ¸ ë° ìœ í‹¸ë¦¬í‹°] ---
 SLLH* createSingleLinkedList() {
     SLLH* h = (SLLH*)malloc(sizeof(SLLH));
     if (h) h->head = NULL;
@@ -75,8 +75,8 @@ double distance(SLL* p) {
 void printDistance(double* d, SLL* t) {
     FILE* fpw = fopen("03.txt", "w");
     if (!fpw || !t) return;
-    fprintf(stdout, "%10s %10s %10s %11s\n", "±¸°£", "°Å¸®(m)", " k", "¹èÅÍ¸® ¼Ò¸ğ");
-    fprintf(fpw, "%10s %10s %10s %11s\n", "±¸°£", "°Å¸®(m)", " k", "¹èÅÍ¸® ¼Ò¸ğ");
+    fprintf(stdout, "%10s %10s %10s %11s\n", "êµ¬ê°„", "ê±°ë¦¬(m)", " k", "ë°°í„°ë¦¬ ì†Œëª¨");
+    fprintf(fpw, "%10s %10s %10s %11s\n", "êµ¬ê°„", "ê±°ë¦¬(m)", " k", "ë°°í„°ë¦¬ ì†Œëª¨");
     SLL* curr = t;
     double td = 0, tb = 0;
     for (int i = 0; i < MAX - 1 && curr->next; i++) {
@@ -93,7 +93,7 @@ void printDistance(double* d, SLL* t) {
     fclose(fpw);
 }
 
-// --- [½ºÅÃ ±¸Çö] ---
+// --- [ìŠ¤íƒ êµ¬í˜„] ---
 int isStackEmpty() { return top == NULL; }
 
 void push(char* wp, double d, double k, double bc) {
@@ -111,10 +111,10 @@ SLL4* pop() {
 char* navigate(SLL4* t) {
     char* nav = (char*)malloc(100);
     nav[0] = '\0';
-    SLL4* curr = (t == NULL) ? top : t; // ÆÄ¶ó¹ÌÅÍ°¡ NULLÀÌ¸é ³»ºÎ top »ç¿ë
+    SLL4* curr = (t == NULL) ? top : t; // íŒŒë¼ë¯¸í„°ê°€ NULLì´ë©´ ë‚´ë¶€ top ì‚¬ìš©
     while (curr) {
         strcat(nav, curr->point);
-        if (curr->next) strcat(nav, "¡æ");
+        if (curr->next) strcat(nav, "â†’");
         curr = curr->next;
     }
     return nav;
@@ -122,7 +122,7 @@ char* navigate(SLL4* t) {
 
 void printIndex(FILE* p)
 {
-    char* menu[] = { "±¸°£", "°Å¸®(m)", " k", "¹èÅÍ¸® ¼Ò¸ğ", "´©Àû ¼Ò¸ğ·®", "»óÅÂ", "ÀÌº¥Æ®", "¾ÈÁ¤È¸±Í °æ·Î" };
+    char* menu[] = { "êµ¬ê°„", "ê±°ë¦¬(m)", " k", "ë°°í„°ë¦¬ ì†Œëª¨", "ëˆ„ì  ì†Œëª¨ëŸ‰", "ìƒíƒœ", "ì´ë²¤íŠ¸", "ì•ˆì •íšŒê·€ ê²½ë¡œ" };
     fprintf(p, "%10s %10s %10s %11s %11s %10s %10s %11s\n",
         *(menu + 0), *(menu + 1), *(menu + 2), *(menu + 3), *(menu + 4), *(menu + 5), *(menu + 6), *(menu + 7));
     printf("%10s %10s %10s %11s %11s %10s %10s %11s\n",
