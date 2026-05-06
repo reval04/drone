@@ -119,3 +119,12 @@ char* navigate(SLL4* t) {
     }
     return nav;
 }
+
+void printIndex(FILE * p)
+{
+    char* menu[] = { "구간", "거리(m)", " k", "배터리 소모", "누적 소모량", "상태", "이벤트", "안정회귀 경로" };
+fprintf(p, "%10s %10s %10s %11s %11s %10s %10s %11s\n",
+	*(menu + 0), *(menu + 1), *(menu + 2), *(menu + 3), *(menu + 4), *(menu + 5), *(menu + 6), *(menu + 7));
+printf("%10s %10s %10s %11s %11s %10s %10s %11s\n",
+	*(menu + 0), *(menu + 1), *(menu + 2), *(menu + 3), *(menu + 4), *(menu + 5), *(menu + 6), *(menu + 7));
+}
