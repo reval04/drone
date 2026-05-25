@@ -1,0 +1,84 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_QUEUE 10
+
+typedef struct {
+    int id;
+} Drone;
+
+typedef struct {
+    Drone data[MAX_QUEUE];
+    int front, rear;
+} Queue;
+
+void initQueue(Queue* q) { q->front = q->rear = 0; }
+int isEmpty(Queue* q) { return q->front == q->rear; }
+int isFull(Queue* q) { return (q->rear + 1) % MAX_QUEUE == q->front; }
+
+void droneinput(Queue* q, Drone dr) {
+    if (isFull(q)) {
+        printf("대기열 가득참: 드론 %d 등록 불가\n", dr.id);
+        return;
+    }
+    q->rear = (q->rear + 1) % MAX_QUEUE;
+    q->data[q->rear] = dr;
+    printf("드론 %d → 충전 대기열 등록\n", dr.id);
+}
+
+Drone droneoutput(Queue* q) {
+    Drone dummy = { -1 };
+    if (isEmpty(q)) return dummy;
+    q->front = (q->front + 1) % MAX_QUEUE;
+    return q->data[q->front];
+}
+
+int queueSize(Queue* q) {
+    return (q->rear - q->front + MAX_QUEUE) % MAX_QUEUE;
+}
+
+int main() {
+    srand(time(NULL));
+    Queue basecamp;
+    initQueue(&basecamp);
+
+    // 1시간 동안 복귀하는 드론 수 (0~20 랜덤)
+    int arrivals = rand() % 21;
+    int mu = 6; // 1시간당 충전 가능한 드론 수 (가정)
+    double rho = (double)arrivals / mu;
+
+    printf("=== 1시간 드론 복귀 시뮬레이션 ===\n");
+    printf("복귀 드론 수 λ = %d, 서비스율 μ = %d, 부하율 ρ = %.2f\n", arrivals, mu, rho);
+
+    if (rho >= 1.0) {
+        printf("베이스캠프 과부하: 임무 중단!\n");
+        return 0;
+    }
+    else {
+        printf("시스템 안정: 작전 지속 가능\n");
+    }
+
+    // 복귀 드론 등록
+    for (int i = 1; i <= arrivals; i++) {
+        Drone d = { 1000 + i };
+        droneinput(&basecamp, d);
+
+        if (queueSize(&basecamp) >= MAX_QUEUE) {
+            printf("베이스캠프 포화 상태 → 임무 중단!\n");
+            return 0;
+        }
+    }
+
+    // 충전 완료 처리
+    while (!isEmpty(&basecamp)) {
+        Drone done = droneoutput(&basecamp);
+        if (done.id != -1) {
+            printf("드론 %d 충전 완료→ 새로운 임무 부여\n",
+                done.id);
+        }
+    }
+
+    printf("모든 드론 충전 완료, 임무 지속 가능\n");
+    return 0;
+}
