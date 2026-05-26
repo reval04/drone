@@ -1,0 +1,85 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_QUEUE 10
+
+typedef struct {
+    int id;
+} Drone;
+
+typedef struct {
+    Drone data[MAX_QUEUE];
+    int front, rear;
+} Queue;
+
+void initQueue(Queue* q) { q->front = q->rear = 0; }
+int isEmpty(Queue* q) { return q->front == q->rear; }
+int isFull(Queue* q) { return (q->rear + 1) % MAX_QUEUE == q->front; }
+
+void droneinput(Queue* q, Drone dr) {
+    if (isFull(q)) {
+        printf("대기열 가득참: 드론 %d 등록 불가\n", dr.id);
+        return;
+    }
+    q->rear = (q->rear + 1) % MAX_QUEUE;
+    q->data[q->rear] = dr;
+    printf("드론 %d → 충전 대기열 등록\n", dr.id);
+}
+
+Drone droneoutput(Queue* q) {
+    Drone dummy = { -1 };
+    if (isEmpty(q)) return dummy;
+    q->front = (q->front + 1) % MAX_QUEUE;
+    return q->data[q->front];
+}
+
+int queueSize(Queue* q) {
+    return (q->rear - q->front + MAX_QUEUE) % MAX_QUEUE;
+}
+
+int main() {
+    srand(time(NULL));
+    Queue basecamp;
+    initQueue(&basecamp);
+
+    int mu = 6; // 1시간당 충전 가능한 드론 수(여기서는 처리율이 된다)
+    int hours = 8; // 시뮬레이션 시간
+
+    for (int h = 1; h <= hours;h++) {
+        int arrivals = rand() % 21; // 도착률(0~20 랜덤)
+        double rho = (double)arrivals / mu; // 부하율
+
+        printf("--%d 시간째 드론 복귀 시뮬레이션--\n",h);
+        printf("복귀 드론 수 λ = %d, 처리율 μ = %d, 부하율 ρ = %.2f\n", arrivals, mu, rho);
+        if (rho > 1.0) { // 도착률이 6을 넘어갈 경우 포하상태가 됨
+            printf("베이스캠프 과부하로 인한 임무중단 // 1시간 후 재개\n"); // 포하상태시 일시중단
+            continue;
+        }
+        else {
+            printf("시스템 안정: 작전 지속 가능\n");
+        }
+
+        // 복귀 드론 등록
+        for (int i = 1; i <= arrivals; i++) {
+            Drone d = { 1000 + i };
+            droneinput(&basecamp, d);
+
+            if (queueSize(&basecamp) >= MAX_QUEUE) {
+                printf("베이스캠프 포화 상태로 인한 임무 중단\n");
+                return 0;
+            }
+        }
+
+        // 충전 완료 처리
+        while (!isEmpty(&basecamp)) {
+            Drone done = droneoutput(&basecamp);
+            int time = rand() % 60; // 실제로는 드론의 잔여 배터리를 파일 입력받아 충전량을 계산
+            if (done.id != -1) {
+                printf("%d분후 드론 %d 충전 완료\n", time, done.id); // 실제로는 드론의 잔여 배터리에 따라 충전시간이 달리진다
+            }
+        }
+        printf("모든 드론 충전 완료, 임무 지속 가능\n"); // 여기서는 1시간내에 드론이 전부 완충된다 가정
+    }
+    return 0;
+}
