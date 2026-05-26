@@ -1,6 +1,7 @@
 #include "drone.h"
 
 int current_drone_id = 1000;
+double force_weight = 0.0; // [추가] 강행으로 인한 도착률 누적 가중치
 
 int main() {
     srand((unsigned int)time(NULL));
@@ -65,8 +66,8 @@ int main() {
                 if (sub_choice == 2) {
                     run_step_03();
                     run_step_04();
-
-                    printf("\n작전이 종료되었습니다. 초기 화면으로 돌아갑니다.\n");
+                    run_step_05();
+                    printf("\n다음 작전 명령을 하달하십시오\n");
                     break;
                 }
             }
